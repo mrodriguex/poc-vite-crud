@@ -65,9 +65,29 @@ router.get('/', async (req, res) => {
     const { conditions, params } = buildFilters(req.query);
     const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
     const orderBy = buildOrderBy(req.query);
-    const sql = `SELECT * FROM "Comps" ${where} ${orderBy}`;
-    const result = await pool.query(sql, params);
-    res.json(result.rows);
+
+    const limit = parseInt(req.query.limit, 10);
+    const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+
+    const countResult = await pool.query(
+      `SELECT COUNT(*) FROM "Comps" ${where}`,
+      params
+    );
+    const total = parseInt(countResult.rows[0].count, 10);
+
+    let sql;
+    let queryParams;
+    if (limit > 0) {
+      const offset = (page - 1) * limit;
+      sql = `SELECT * FROM "Comps" ${where} ${orderBy} LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
+      queryParams = [...params, limit, offset];
+    } else {
+      sql = `SELECT * FROM "Comps" ${where} ${orderBy}`;
+      queryParams = params;
+    }
+
+    const result = await pool.query(sql, queryParams);
+    res.json({ data: result.rows, total });
   } catch (err) {
     console.error('GET /comps error:', err);
     res.status(500).json({ error: 'Failed to fetch records' });

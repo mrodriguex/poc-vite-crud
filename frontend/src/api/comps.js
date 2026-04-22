@@ -10,11 +10,15 @@ function buildQuery(filters) {
   return params.toString();
 }
 
-export async function fetchComps(filters = {}, sortBy = 'id', sortDir = 'asc') {
-  const query = buildQuery({ ...filters, sortBy, sortDir });
+export async function fetchComps(filters = {}, sortBy = 'id', sortDir = 'asc', page = 1, limit = 5) {
+  const query = buildQuery({ ...filters, sortBy, sortDir, page, limit });
   const res = await fetch(`${BASE_URL}${query ? `?${query}` : ''}`);
   if (!res.ok) throw new Error('Failed to fetch comps');
-  return res.json();
+  return res.json(); // { data, total }
+}
+
+export async function fetchAllComps(filters = {}, sortBy = 'id', sortDir = 'asc') {
+  return fetchComps(filters, sortBy, sortDir, 1, 0);
 }
 
 export async function createComp(data) {

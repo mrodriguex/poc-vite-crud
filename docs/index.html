@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>poc-vite-crud – Comps Manager</title>
+    <link rel="icon" type="image/png" href="assets/images/favicon.png" />
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="assets/css/menu.css" />
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <button class="hamburger" id="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <div class="nav-menu" id="nav-menu">
+                <a href="#about" class="nav-link">About</a>
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#tech" class="nav-link">Tech Stack</a>
+                <a href="#usage" class="nav-link">Usage</a>
+                <a href="#api" class="nav-link">API</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero" style="background:linear-gradient(90deg,#1a1a2e 0%,#4f46e5 100%);color:#fff;">
+        <div class="hero-content">
+            <img src="assets/images/application_logo.png" alt="poc-vite-crud Logo" class="avatar">
+            <h1>poc-vite-crud</h1>
+            <p class="subtitle">
+                Full-stack Comps Manager — Vite + React frontend, Node.js + Express API, PostgreSQL
+            </p>
+            <div class="hero-links">
+                <a href="https://github.com/mrodriguex/poc-vite-crud/blob/main/README.md" target="_blank">README</a>
+                <a href="https://github.com/mrodriguex/poc-vite-crud" target="_blank">GitHub</a>
+                <a href="#api">API Docs</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="section" id="about">
+            <h2>About</h2>
+            <p>
+                <strong>poc-vite-crud</strong> is a production-quality proof-of-concept web application for managing
+                <strong>Comps</strong> (comparable real estate sales) records. It demonstrates a clean full-stack setup
+                with a React SPA frontend, a RESTful Express API, and a PostgreSQL database — built with simplicity,
+                correctness, and developer experience in mind.
+            </p>
+        </section>
+
+        <section class="section" id="features">
+            <h2>Features</h2>
+            <ul>
+                <li>Sortable, paginated table of Comps records (5 per page)</li>
+                <li>Advanced filtering: Address, City, County, State, Zip Code, Sale Date range, Sale Price range</li>
+                <li>Add / Edit / Delete records via a clean modal form</li>
+                <li>Export the currently filtered and sorted dataset as a CSV file</li>
+                <li>Server-side pagination with total record count</li>
+                <li>Rate-limited REST API (<code>express-rate-limit</code>)</li>
+                <li>Environment-based configuration via <code>.env</code> / <code>.env.example</code></li>
+                <li>Vite dev-server proxy — no CORS setup needed during development</li>
+            </ul>
+        </section>
+
+        <section class="section" id="tech">
+            <h2>Tech Stack</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>Frontend</h3>
+                    <p>React 18, Vite 5, plain CSS</p>
+                </div>
+                <div class="skill-category">
+                    <h3>Backend</h3>
+                    <p>Node.js 18+, Express 4, express-rate-limit, pg (node-postgres)</p>
+                </div>
+                <div class="skill-category">
+                    <h3>Database</h3>
+                    <p>PostgreSQL 14+</p>
+                </div>
+                <div class="skill-category">
+                    <h3>Tooling</h3>
+                    <p>npm, nodemon, dotenv, Vite proxy</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="usage">
+            <h2>Usage</h2>
+
+            <h3 style="margin-bottom:1.2rem;">Database</h3>
+            <ul>
+                <li><strong>Create DB:</strong> <code>CREATE DATABASE poc_vite_crud;</code></li>
+                <li><strong>Run schema:</strong> <code>psql -U postgres -d poc_vite_crud -f db/schema.sql</code></li>
+            </ul>
+
+            <h3 style="margin-bottom:1.2rem;">Backend</h3>
+            <ul>
+                <li><strong>Install:</strong> <code>cd backend &amp;&amp; npm install</code></li>
+                <li><strong>Configure:</strong> <code>cp .env.example .env</code> and fill in DB credentials</li>
+                <li><strong>Dev:</strong> <code>npm run dev</code> — API at <code>http://localhost:3001</code></li>
+                <li><strong>Production:</strong> <code>npm start</code></li>
+            </ul>
+
+            <h3 style="margin-bottom:1.2rem;">Frontend</h3>
+            <ul>
+                <li><strong>Install:</strong> <code>cd frontend &amp;&amp; npm install</code></li>
+                <li><strong>Configure:</strong> <code>cp .env.example .env</code> (set <code>VITE_BACKEND_URL</code> and <code>VITE_DEV_PORT</code>)</li>
+                <li><strong>Dev:</strong> <code>npm run dev</code> — UI at <code>http://localhost:5173</code></li>
+                <li><strong>Build:</strong> <code>npm run build</code> (output: <code>dist/</code>)</li>
+            </ul>
+
+            <div class="usage-gallery">
+                <figure class="gallery-figure card">
+                    <div class="img-wrapper">
+                        <img src="assets/images/ui_comps_catalog.png" alt="Comps Catalog" class="gallery-img-responsive" />
+                    </div>
+                    <figcaption><strong>Catalog:</strong> Paginated, sortable table with filter bar and CSV export.</figcaption>
+                </figure>
+                <figure class="gallery-figure card">
+                    <div class="img-wrapper">
+                        <img src="assets/images/ui_comps_insert.png" alt="Add Comp" class="gallery-img-responsive" />
+                    </div>
+                    <figcaption><strong>Add Comp:</strong> Modal form to create a new comparable sales record.</figcaption>
+                </figure>
+                <figure class="gallery-figure card">
+                    <div class="img-wrapper">
+                        <img src="assets/images/ui_comps_edit.png" alt="Edit Comp" class="gallery-img-responsive" />
+                    </div>
+                    <figcaption><strong>Edit Comp:</strong> Modal form pre-filled with the selected record's data.</figcaption>
+                </figure>
+                <figure class="gallery-figure card">
+                    <div class="img-wrapper">
+                        <img src="assets/images/ui_comps_delete.png" alt="Delete Comp" class="gallery-img-responsive" />
+                    </div>
+                    <figcaption><strong>Delete Comp:</strong> Confirmation dialog before removing a record.</figcaption>
+                </figure>
+            </div>
+
+            <h3 style="margin-bottom:1.2rem;">Environment Variables</h3>
+            <ul>
+                <li><strong>Backend</strong> (<code>backend/.env</code>): <code>DB_HOST</code>, <code>DB_PORT</code>, <code>DB_NAME</code>, <code>DB_USER</code>, <code>DB_PASSWORD</code>, <code>PORT</code></li>
+                <li><strong>Frontend</strong> (<code>frontend/.env</code>): <code>VITE_BACKEND_URL</code> (proxy target), <code>VITE_DEV_PORT</code></li>
+            </ul>
+
+            <section class="section" id="api">
+                <h2>API Reference</h2>
+                <p>Base URL: <code>http://localhost:3001</code></p>
+                <ul>
+                    <li><strong>List comps:</strong> <code>GET /comps</code> — supports filters, sort, and pagination</li>
+                    <li><strong>Create comp:</strong> <code>POST /comps</code></li>
+                    <li><strong>Update comp:</strong> <code>PUT /comps/:id</code></li>
+                    <li><strong>Delete comp:</strong> <code>DELETE /comps/:id</code></li>
+                    <li><strong>Health check:</strong> <code>GET /health</code></li>
+                </ul>
+                <p><strong>GET /comps query parameters:</strong></p>
+                <ul>
+                    <li><code>address</code>, <code>city</code>, <code>county</code>, <code>state</code>, <code>zipCode</code> — partial ILIKE match</li>
+                    <li><code>saleDateFrom</code> / <code>saleDateTo</code> — date range (YYYY-MM-DD)</li>
+                    <li><code>salePriceMin</code> / <code>salePriceMax</code> — price range</li>
+                    <li><code>sortBy</code> — column name; <code>sortDir</code> — <code>asc</code> | <code>desc</code></li>
+                    <li><code>page</code> — page number (default: 1); <code>limit</code> — items per page (default: 5, pass 0 for all)</li>
+                </ul>
+                <p>Response: <code>{ "data": [...], "total": N }</code></p>
+            </section>
+
+            <section class="section" id="contact">
+                <h2>Contact</h2>
+                <p>Maintainer: Manuel Rodríguez Camacho</p>
+                <p>
+                    <a href="https://github.com/mrodriguex" target="_blank">GitHub</a> |
+                    <a href="https://www.linkedin.com/in/manuel-rodriguez-camacho/" target="_blank">LinkedIn</a>
+                </p>
+            </section>
+    </main>
+
+    <footer>
+        <footer class="footer">
+            <p>&copy; <span id="year"></span> poc-vite-crud. All rights reserved.</p>
+        </footer>
+    </footer>
+    <script src="assets/js/main.js"></script>
+</body>
+
+</html>

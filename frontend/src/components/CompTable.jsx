@@ -26,7 +26,8 @@ function formatValue(key, val) {
   return val;
 }
 
-export default function CompTable({ comps, sortBy, sortDir, onSort, onEdit, onDelete }) {
+export default function CompTable({ comps, sortBy, sortDir, onSort, onEdit, onDelete, page, totalCount, pageSize, onPageChange }) {
+  const totalPages = Math.ceil(totalCount / pageSize);
   function handleSort(key) {
     if (!SORTABLE.has(key)) return;
     if (sortBy === key) {
@@ -76,6 +77,15 @@ export default function CompTable({ comps, sortBy, sortDir, onSort, onEdit, onDe
           ))}
         </tbody>
       </table>
+      {totalPages > 1 && (
+        <div className="pagination">
+          <button onClick={() => onPageChange(1)} disabled={page === 1} title="First page">«</button>
+          <button onClick={() => onPageChange(page - 1)} disabled={page === 1} title="Previous page">‹</button>
+          <span className="pagination-info">Page {page} of {totalPages}</span>
+          <button onClick={() => onPageChange(page + 1)} disabled={page === totalPages} title="Next page">›</button>
+          <button onClick={() => onPageChange(totalPages)} disabled={page === totalPages} title="Last page">»</button>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { fetchComps, createComp, updateComp, deleteComp } from './api/comps';
+import { fetchComps, fetchAllComps, createComp, updateComp, deleteComp } from './api/comps';
 import FilterBar, { EMPTY_FILTERS } from './components/FilterBar';
 import CompTable from './components/CompTable';
 import CompModal from './components/CompModal';
@@ -43,19 +43,22 @@ export default function App() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingComp, setEditingComp] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [page, setPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
 
   const loadComps = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await fetchComps(filters, sortBy, sortDir);
+      const { data, total } = await fetchComps(filters, sortBy, sortDir, page);
       setComps(data);
+      setTotalCount(total);
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
-  }, [filters, sortBy, sortDir]);
+  }, [filters, sortBy, sortDir, page]);
 
   useEffect(() => {
     loadComps();
@@ -64,6 +67,26 @@ export default function App() {
   function handleSort(col, dir) {
     setSortBy(col);
     setSortDir(dir);
+    setPage(1);
+  }
+
+  function handleFiltersChange(newFilters) {
+    setFilters(newFilters);
+    setPage(1);
+  }
+
+  function handleFiltersReset() {
+    setFilters(EMPTY_FILTERS);
+    setPage(1);
+  }
+
+  async function handleExportCsv() {
+    try {
+      const { data } = await fetchAllComps(filters, sortBy, sortDir);
+      exportToCsv(data);
+    } catch (err) {
+      alert(err.message);
+    }
   }
 
   function openAdd() {
@@ -116,7 +139,7 @@ export default function App() {
         <h1>Comps Manager</h1>
         <div className="header-actions">
           <button className="btn-primary" onClick={openAdd}>+ Add Comp</button>
-          <button className="btn-secondary" onClick={() => exportToCsv(comps)} disabled={comps.length === 0}>
+          <button className="btn-secondary" onClick={handleExportCsv} disabled={totalCount === 0}>
             Export CSV
           </button>
         </div>
@@ -125,14 +148,14 @@ export default function App() {
       <main className="app-main">
         <FilterBar
           filters={filters}
-          onChange={setFilters}
-          onReset={() => setFilters(EMPTY_FILTERS)}
+          onChange={handleFiltersChange}
+          onReset={handleFiltersReset}
         />
 
         {error && <div className="error-banner">Error: {error}</div>}
 
         <div className="table-meta">
-          {!loading && <span>{comps.length} record{comps.length !== 1 ? 's' : ''} found</span>}
+          {!loading && <span>{totalCount} record{totalCount !== 1 ? 's' : ''} found</span>}
           {loading && <span className="loading">Loading…</span>}
         </div>
 
@@ -143,6 +166,10 @@ export default function App() {
           onSort={handleSort}
           onEdit={openEdit}
           onDelete={confirmDelete}
+          page={page}
+          totalCount={totalCount}
+          pageSize={5}
+          onPageChange={setPage}
         />
       </main>
 
